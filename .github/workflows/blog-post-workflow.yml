@@ -1,0 +1,32 @@
+# 自动更新 README 中的博客文章列表
+# 使用方法：
+# 1. 取消下面的注释
+# 2. 修改 RSS_FEED_URL 为你的博客 RSS 地址
+# 3. 修改 README 中对应位置添加 BLOG-POST-LIST 标记
+
+name: Latest Blog Posts
+
+on:
+  schedule:
+    # 每 6 小时更新一次
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-readme-with-blog:
+    name: Update this repo's README with latest blog posts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull latest blog posts
+        uses: gautamkrishnar/blog-post-workflow@v1
+        with:
+          # TODO: 替换为你的博客 RSS 地址
+          feed_names: 'blog'
+          max_post_count: 5
+          # 示例 RSS 地址，请替换：
+          # - https://dev.to/feed/your-username
+          # - https://your-blog.com/rss.xml
+          # - https://medium.com/feed/@your-username
+          readme_path: ./README.md
+          comment_tag_name: BLOG-POST-LIST

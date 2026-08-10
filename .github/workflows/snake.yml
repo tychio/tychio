@@ -1,0 +1,36 @@
+# 贡献蛇动画生成
+# 会在 output 分支生成动画 SVG 文件
+# 需要在 README 中引用这些文件
+
+name: Generate Snake Animation
+
+on:
+  schedule:
+    # 每 12 小时生成一次
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Generate contribution snake animation
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: tychio
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      - name: Push to output branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
